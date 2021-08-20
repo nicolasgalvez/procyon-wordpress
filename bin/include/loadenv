@@ -3,7 +3,7 @@
 
 if [ -f .env ]
 then
-  export $(sed 's/#.*//g' .env | xargs)
+  export $(grep -v '^#' .env | xargs)
 else
   echo "I can't read the .env file. Make sure you are in the project directory, not the bin directory."
   exit 1

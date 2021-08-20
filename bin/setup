@@ -7,18 +7,17 @@ set -e
 
 echo "Installing WP Core"
 mkdir -p wordpress
-cd wordpress
 
-lando init \
-  --source remote \
-  --remote-url https://wordpress.org/latest.tar.gz \
-  --recipe wordpress \
-  --webroot wordpress \
-  --name WordPress
+cp config/wp-config-sample.php wordpress/wp-config.php
 
+lando start
+lando wp core download
 lando wp core install --url="$LOCAL_HOST".lndo.site --title=WordPress --admin_user="$admin_user" --admin_password="$admin_password" --admin_email="$admin_email"
 
 echo "Cleaning up default install"
+
+exit
+
 lando wp post delete $(lando wp post list --post_type='page' --format=ids)
 lando wp post delete $(lando wp post list --format=ids)
 lando wp theme install twenty-twenty-one

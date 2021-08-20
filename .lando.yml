@@ -1,4 +1,4 @@
-name: example.com
+name: procyon
 recipe: wordpress
 config:
   php: '7.4'
@@ -11,8 +11,8 @@ config:
     #php: config/php.ini
     #server: config/server.conf
     #vhosts: config/default.conf
-env_file:
-  - .env
+#env_file:
+#  - .env
 services:
   appserver:
     overrides:
