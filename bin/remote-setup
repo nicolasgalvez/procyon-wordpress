@@ -1,0 +1,40 @@
+#!/usr/bin/env bash
+
+# This script will setup git on the remote Digital Ocean server.
+# It will create a branch called 'live' so you can deploy to the live server with a git push.
+# It will move the current website to a directory called html.bak.
+# Based on the steps here: https://www.digitalocean.com/community/tutorials/how-to-set-up-automatic-deployment-with-git-with-a-vps
+# DO NOT USE on an existing server unless you really know what you are doing.
+
+source bin/include/loadenv
+
+set -e
+
+echo "WARNING: This script will modify your live server. Do not run on an existing wordpress setup unless you are sure you know what you are doing."
+
+read -p "Continue (y/n)?" choice
+case "$choice" in
+  y|Y ) echo "yes";;
+  n|N ) echo "no";;
+  * ) echo "invalid";;
+esac
+
+# Setup git on the remote server using the script in includes dir.
+ssh "$REMOTE_USER"@"$REMOTE_HOST" 'bash -s' < bin/include/remote-git-setup
+
+# Create remote git branch
+git remote add live ssh://"$REMOTE_USER"@"$REMOTE_HOST"/var/repo/live.git
+# git remote add staging ssh://$REMOTE_USER@$REMOTE_HOST/repo/staging.git
+
+# Do first deploy
+git push live -f
+
+# Move the default wordpress installation, and copy the generated htaccess and wp-config.php.
+ssh "$REMOTE_USER"@"$REMOTE_HOST" 'cd /var/www
+mv html html.bak
+ln -s live/wordpress html
+cp html.bak/wp-config.php html/
+cp /var/www/html.bak/.htaccess /var/www/live/wordpress/'
+
+# change permissions to the web user or uploads and stuff like that won't work.
+ssh "$REMOTE_USER"@"$REMOTE_HOST" 'chown -R www-data:www-data /var/www/html/*'

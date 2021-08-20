@@ -1,0 +1,7 @@
+#!/usr/bin/env bash
+# Updates wordpress stuff. Remember to test the site locally and on staging before pushing live.
+set -e
+
+lando wp core update
+lando wp plugin update --all
+lando wp theme update --all

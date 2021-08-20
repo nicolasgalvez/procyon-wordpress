@@ -1,0 +1,12 @@
+/wordpress/wp-config.php
+/wordpress/wp-content/uploads/
+/wordpress/wp-content/debug.log
+/wordpress/wp-content/upgrade/
+/wordpress/wp-content/cache/
+/wordpress/wp-content/et-cache/
+/wordpress/wp-content/plugins/timber-library/cache/twig/
+/wordpress/.htaccess
+/db.sql
+.DS_Store
+.env
+.idea

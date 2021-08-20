@@ -1,0 +1,2 @@
+# WordPress path wasn't being resolved by the webroot entry in the .lando.yml file.
+path: wordpress/

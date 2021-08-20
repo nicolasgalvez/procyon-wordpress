@@ -1,0 +1,26 @@
+#!/usr/bin/env bash
+# Pulls the database from the remote server and imports it to the local site
+source bin/include/loadenv
+
+set -e
+# Export DB and sync
+# Export DB to remote ~/ dir.
+# Create wp-content/db on remote server if it doesn't exist.
+# Move sql file to wp-content/db where it can be downloaded
+echo "Connecting to $REMOTE_USER@$REMOTE_HOST"
+
+SQL_FILE=$(ssh $REMOTE_USER@$REMOTE_HOST 'wp --allow-root db export --porcelain')
+
+echo "Created $SQL_FILE"
+
+rsync "$REMOTE_USER@$REMOTE_HOST:$SQL_FILE" db.sql
+
+# Import db locally
+lando db-import db.sql
+
+# Search and replace
+# This assumes you have your WordPress database setup properly, with consistent use of www.
+lando wp search-replace "//$REMOTE_HOST" "//$LOCAL_HOST.lndo.site"
+
+# Deactivate the security plugin on local
+lando wp plugin deactivate better-wp-security

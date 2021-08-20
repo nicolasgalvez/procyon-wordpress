@@ -1,0 +1,21 @@
+name: example.com
+recipe: wordpress
+config:
+  php: '7.4'
+  via: apache
+  webroot: wordpress
+  database: mysql
+  xdebug: true
+#  config:
+    #database: config/db.cnf
+    #php: config/php.ini
+    #server: config/server.conf
+    #vhosts: config/default.conf
+env_file:
+  - .env
+services:
+  appserver:
+    overrides:
+      environment:
+        # Support XDEBUG.
+        PHP_IDE_CONFIG: "serverName=appserver"

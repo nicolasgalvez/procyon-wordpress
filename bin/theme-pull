@@ -1,0 +1,8 @@
+#!/usr/bin/env bash
+# Script will pull existing wordpress site's themes to the localhost.
+# Created to import remote changes to the repo, or to "git-ify" a live site.
+source bin/include/loadenv
+set -e
+
+# Pull the files in the theme dir to localhost.
+rsync -azP "$REMOTE_USER"@"$REMOTE_HOST":$REMOTE_WEBROOT/wp-content/themes/ ./wordpress/wp-content/themes

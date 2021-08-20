@@ -1,0 +1,34 @@
+#!/usr/bin/env bash
+# https://www.digitalocean.com/community/tutorials/how-to-set-up-automatic-deployment-with-git-with-a-vps
+
+set -e
+
+#if [ "$1" != "" ]; then
+#    echo "domain is "
+#else
+#    echo "Usage: "
+#fi
+
+# Create repo dir for remote deployment
+mkdir /var/www/live
+mkdir /var/www/staging
+
+cd /var
+mkdir repo && cd repo
+mkdir live.git && cd live.git
+git init --bare
+cd hooks
+
+echo '#!/usr/bin/env bash
+git --work-tree=/var/www/live --git-dir=/var/repo/live.git checkout -f' > post-receive
+chmod +x post-receive
+
+cd /var/repo
+
+mkdir staging.git && cd staging.git
+git init --bare
+cd hooks
+
+echo '#!/usr/bin/env bash
+git --work-tree=/var/www/staging --git-dir=/var/repo/staging.git checkout -f' > post-receive
+chmod +x post-receive

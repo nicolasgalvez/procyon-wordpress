@@ -1,0 +1,16 @@
+#!/usr/bin/env bash
+# Push files to remote server
+
+source bin/include/loadenv
+
+set -e
+echo "WARNING: unless there is a very compelling reason, you should not update the production files with local data!"
+
+read -p "Continue (y/n)?" choice
+case "$choice" in
+  y|Y ) echo "yes";;
+  n|N ) echo "no";;
+  * ) echo "invalid";;
+esac
+
+rsync -azP ./wordpress/wp-content/uploads/ $REMOTE_USER@$REMOTE_HOST:$REMOTE_WEBROOT/wp-content/uploads

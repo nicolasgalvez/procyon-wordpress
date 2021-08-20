@@ -1,0 +1,15 @@
+#!/usr/bin/env bash
+# Loads the environment variables from the .env file.
+
+if [ -f .env ]
+then
+  export $(sed 's/#.*//g' .env | xargs)
+else
+  echo "I can't read the .env file. Make sure you are in the project directory, not the bin directory."
+  exit 1
+fi
+
+# Make the lando version of the host by cutting the www or other subdomain.
+
+LOCAL_HOST=${REMOTE_HOST#*.*}
+# echo $LOCAL_HOST

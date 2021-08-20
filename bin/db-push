@@ -1,0 +1,23 @@
+#!/usr/bin/env bash
+# Pushes the database to remote server.
+# Use with caution. In general, it's never a good idea to push content to production. You should only pull content down from production.
+
+source bin/include/loadenv
+
+set -e
+echo "WARNING: unless there is a very compelling reason, you should not update the production database with local data!"
+
+read -p "Continue (y/n)?" choice
+case "$choice" in
+  y|Y ) echo "yes";;
+  n|N ) echo "no";;
+  * ) echo "invalid";;
+esac
+
+
+lando wp --allow-root db export db.sql
+rsync db.sql $REMOTE_USER@$REMOTE_HOST:
+
+ssh $REMOTE_USER@$REMOTE_HOST "wp --allow-root db import db.sql
+wp --allow-root search-replace $LOCAL_HOST.lndo.site $REMOTE_HOST
+rm db.sql"

@@ -1,0 +1,25 @@
+#!/usr/bin/env bash
+
+source bin/include/loadenv
+# This script will set up your fresh and clean, clean WP install. Make sure you have a .env file first.
+set -e
+
+
+echo "Installing WP Core"
+mkdir -p wordpress
+cd wordpress
+
+lando init \
+  --source remote \
+  --remote-url https://wordpress.org/latest.tar.gz \
+  --recipe wordpress \
+  --webroot wordpress \
+  --name WordPress
+
+lando wp core install --url="$LOCAL_HOST".lndo.site --title=WordPress --admin_user="$admin_user" --admin_password="$admin_password" --admin_email="$admin_email"
+
+echo "Cleaning up default install"
+lando wp post delete $(lando wp post list --post_type='page' --format=ids)
+lando wp post delete $(lando wp post list --format=ids)
+lando wp theme install twenty-twenty-one
+lando wp plugin install < config/default-plugins.json --format=json
