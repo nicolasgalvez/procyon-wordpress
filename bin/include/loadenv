@@ -10,6 +10,5 @@ else
 fi
 
 # Make the lando version of the host by cutting the www or other subdomain.
-
-LOCAL_HOST=${REMOTE_HOST#*.*}
 # echo $LOCAL_HOST
+LOCAL_HOST=`grep name .lando.yml | cut -d: -f2 | xargs`
