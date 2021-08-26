@@ -1,0 +1,7 @@
+#!/usr/bin/env bash
+# Pulls the files from the remote server
+
+source bin/include/loadenv
+set -e
+
+rsync -azP $REMOTE_USER@$REMOTE_HOST:$REMOTE_WEBROOT/wp-content/uploads/ ./wordpress/wp-content/uploads
